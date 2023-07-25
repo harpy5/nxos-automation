@@ -1,0 +1,34 @@
+---
+- name: Ansible playbook to configure an interface of nxos device
+  hosts: localhost
+  gather_facts: false
+  vars_prompt:
+   - name: device_IP
+     prompt: "Enter the IP address of the Nexus Device: "
+     private: no
+   - name: ip_address
+     prompt: "Enter the ip address of the interface: "
+     private: no
+   - name: interface_name
+     prompt: "Enter the interface name [eht1/1]: "
+     private: no
+   - name: subnet_mask
+     prompt: "Enter the subnet mask: "
+     private: no
+   - name: username
+     prompt: "Enter the USERNAME of the device: "
+     private: no
+   - name: password
+     prompt: "Enter the Password"
+     
+
+  tasks:
+   - name: Run a python script 
+     command: python3 Interface-config.py
+     environment:
+      USER_NAME: "{{ username }}"
+      PASSWORD: "{{ password }}"
+      DEVICE_IP: "{{ device_IP }}"
+      IP_ADDRESS: "{{ ip_address }}"
+      INTERFACE_NAME: "{{ interface_name }}"
+      SUBNET_MASK: "{{ subnet_mask }}"

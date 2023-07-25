@@ -1,0 +1,66 @@
+---
+- name: Ansible playbook to configure an interface of nxos device
+  hosts: localhost
+  gather_facts: false
+  vars_prompt:
+   - name: device_IP
+     prompt: "Enter the IP address of the Nexus Device: "
+     private: no
+   - name: username
+     prompt: "Enter the USERNAME of the device: "
+     private: no
+   - name: password
+     prompt: "Enter the Password: "
+   - name: choose
+     prompt: "1) Configure IP address   2) Configure a trunk port: "
+     private: no
+
+  tasks:
+   - name: Enter the interface name
+     pause:
+      prompt: "Enter the interface name [eth1/1]: "
+     register: interface_name
+     when: choose == "1"
+   - name: Ip address of the interface
+     pause:
+      prompt: "Enter the IP address to assign [192.168.10.1/24]: "
+     register: ip_address
+     when: choose == "1"
+   - name: Enter the subnet mask
+     pause:
+      prompt: "Enter the subnet mask [255.255.255.0]: "
+     register: subnet_mask
+     when: choose == "1"
+   - name: Running a python script for layer 3 configuration
+     command: python3 Interface-config.py
+     environment:
+      USER_NAME: "{{ username }}"
+      PASSWORD: "{{ password }}"
+      DEVICE_IP: "{{ device_IP }}"
+      IP_ADDRESS: "{{ ip_address.user_input }}"
+      INTERFACE_NAME: "{{ interface_name.user_input }}"
+      SUBNET_MASK: "{{ subnet_mask.user_input }}"
+     when: choose == "1"
+
+   - name: Prompt User for interface name
+     pause:
+      prompt: "Enter the interface name"
+     register: interface_name
+     when: choose =="2"
+
+   - name: Prompt User for allowed vlans
+     pause:
+      prompt: "Enter the allowed vlans"
+     register: allowed_vlans
+     when: choose =="2"
+
+   - name: Python script to to configure layer 2
+     command: python3 trunk-int-conf.py
+     environment:
+      USER_NAME: "{{ username }}"
+      PASSWORD: "{{ password }}"
+      DEVICE_IP: "{{ device_IP }}"
+      INTERFACE_NAME: "{{ interface_name.user_input }}"
+      ALLOWED_VLANS: "{{ allowed_vlans.user_input }}"
+     when: choose == "2"
+
