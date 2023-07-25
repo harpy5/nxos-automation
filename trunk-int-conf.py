@@ -1,11 +1,17 @@
 from ncclient import manager
 from ncclient.xml_ import new_ele, sub_ele
 
+import os
+
 # Replace these with your Nexus 9000 device details
-DEVICE_IP = "10.85.48.163"
+#DEVICE_IP = "10.85.48.163"
 NETCONF_PORT = 830
-USERNAME = "cisco"
-PASSWORD = "cisco"
+#USERNAME = "cisco"
+#PASSWORD = "cisco"
+DEVICE_IP = os.environ.get('DEVICE_IP')
+
+USERNAME = os.environ.get('USER_NAME')
+PASSWORD =os.environ.get('PASSWORD')
 
 def configure_interface(interface_name, allowed_vlans):
     # NETCONF template for interface configuration
@@ -45,7 +51,7 @@ def configure_interface(interface_name, allowed_vlans):
 
 
 if __name__ == "__main__":
-    interface_name = "eth1/2"  # Replace this with the name of the interface you want to configure
-    allowed_vlans = "100,200"# Replace this with the desired netmask for the interface
+     allowed_vlans = os.environ.get('ALLOWED_VLANS')
+     interface_name = os.environ.get('INTERFACE_NAME')
 
-    configure_interface(interface_name, allowed_vlans)
+     configure_interface(interface_name, allowed_vlans)
