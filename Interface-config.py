@@ -4,8 +4,6 @@ from cryptography.hazmat.backends import default_backend
 import warnings
 import os
 
-warnings.filterwarnings("ignore", message=" Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography. The next release of cryptography will remove support for Python 3.6")
-
 # Replace these with your Nexus 9000 device details
 #DEVICE_IP = "10.85.48.163"
 NETCONF_PORT = 830
